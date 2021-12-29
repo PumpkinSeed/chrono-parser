@@ -1,7 +1,14 @@
 [package]
-name = "chrono-parser"
+name = "chrono_parser"
 version = "0.1.0"
 edition = "2021"
+authors = ["PumpkinSeed <qwer.kocka@gmail.com>"]
+edition = "2018"
+description = "Parser extension on the top of chrono"
+license = "Apache License"
+readme = "README.md"
+repository = "https://github.com/PumpkinSeed/chrono-parser"
+keywords = ["date", "time", "chrono-parser"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
