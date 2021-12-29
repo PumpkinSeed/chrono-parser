@@ -1,5 +1,4 @@
 use ::regex::Regex;
-use chrono::Datelike;
 use chrono::{DateTime, FixedOffset, ParseResult};
 
 pub mod formats;
@@ -71,15 +70,42 @@ pub fn datetime(data: String) -> ParseResult<DateTime<FixedOffset>> {
 
 #[cfg(test)]
 mod tests {
-    use chrono::Datelike;
+    use chrono::{Datelike, Timelike};
 
     #[test]
     fn test_parse() {
         match crate::datetime("2021-10-12T07:20:50.52Z".to_string()) {
             Ok(v) => {
-                println!("{}", v.year());
+                assert_eq!(v.year(), 2021);
+                assert_eq!(v.month(), 10);
+                assert_eq!(v.day(), 12);
+                assert_eq!(v.hour(), 7);
+                assert_eq!(v.minute(), 20);
+                assert_eq!(v.second(), 50);
             }
             Err(err) => panic!("{}", err.to_string()),
         }
+        match crate::datetime("02 Jan 06 15:04 -0700".to_string()) {
+            Ok(v) => {
+                assert_eq!(v.year(), 2006);
+                assert_eq!(v.month(), 01);
+                assert_eq!(v.day(), 02);
+                assert_eq!(v.hour(), 15);
+                assert_eq!(v.minute(), 4);
+                assert_eq!(v.second(), 0);
+            }
+            Err(err) => panic!("{}", err.to_string()),
+        }
+        // Blocked by: https://github.com/chronotope/chrono/issues/623
+        // Scenarios:
+        // RFC1123 = "Mon, 02 Jan 2006 15:04:05 MST"
+        // RFC1123Z = "Mon, 02 Jan 2006 15:04:05 -0700"
+        // RFC822 = "02 Jan 06 15:04 MST"
+        // RFC822Z = "02 Jan 06 15:04 -0700"
+        // RFC3339Nano = "2006-01-02T15:04:05.999999999Z07:00"
+        // ANSIC = "Mon Jan _2 15:04:05 2006"
+        // UnixDate = "Mon Jan _2 15:04:05 MST 2006"
+        // RubyDate = "Mon Jan 02 15:04:05 -0700 2006"
+        // RFC850 = "Monday, 02-Jan-06 15:04:05 MST"
     }
 }
